@@ -1,4 +1,6 @@
 
+import sys
+
 import logging
 
 import asyncio
@@ -7,9 +9,67 @@ import aiocoap
 import aiocoap.resource as resource
 
 
+class CoApNode:
+    """ """
+    def __init__(self, name, addr):  
+        self.deviceName = name
+        self.ipAddr = addr
+
+    ipAddr = 0
+    deviceName = " "
+
+class deviceList:
+
+    deviceList = []
+
+    def printDeviceList(self):
+        original_stdout = sys.stdout
+        with open('node_directory.txt', 'w') as f:
+            sys.stdout = f
+            index = 1
+            print("###")
+            for x in self.deviceList:
+                print(" #"+str(index))
+                print(" -"+x.deviceName)
+                print(" -"+x.ipAddr)
+                index = index + 1
+            print("###")
+            print(" ")
+            sys.stdout = original_stdout
+            print("New list has been written to node_directory.txt")
+
+listt = deviceList
+
 class NewNodeAddrResource(resource.Resource):
     """ When a node joins the network, it pus its ipv6 address and device name to this resource. Payload format is: 'Device1,fd11:22:0:0:fec7:c8ff:c86a:a009' """
-    
+
+    def addNode(self, nodeInfo):
+        global listt  
+
+        # get coap node info
+        index = 1
+        name = ""
+        addr = ""
+        for x in nodeInfo: # get device name
+            if x != ',':
+                name = name + x
+                index = index+1
+            else:
+                break
+        for x in nodeInfo[index:]: # get IP address
+            addr = addr + x
+        tempNode = CoApNode(name, addr) # tempNode holds the received node data
+
+        # check if the device name is already inthe list. If so, update its IP address
+        newNode = 1 # assume the device name is new
+        for x in listt.deviceList:
+            if x.deviceName == tempNode.deviceName:
+                x.ipAddr = tempNode.ipAddr
+                newNode = 0 # device name is already in the lists
+        if newNode == 1: #if the device name is new, add the node info to the list
+            listt.deviceList.append(tempNode)
+        listt.printDeviceList(self=listt) # print the list to the file
+        
     def set_content(self, content):
         self.content = content
     
@@ -20,13 +80,16 @@ class NewNodeAddrResource(resource.Resource):
     async def render_put(self, request):
         print('PUT payload: %s' % request.payload)
         self.set_content(request.payload)
+        self.addNode(str(request.payload))
         return aiocoap.Message(code=aiocoap.CHANGED, payload=self.content)
 
 # logging setup
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("coap-server").setLevel(logging.DEBUG)
 
+
 async def main():
+
     # Resource tree creation
     root = resource.Site()
 
