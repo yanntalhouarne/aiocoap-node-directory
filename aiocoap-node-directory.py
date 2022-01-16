@@ -26,14 +26,11 @@ class deviceList:
         original_stdout = sys.stdout
         with open('node_directory.txt', 'w') as f:
             sys.stdout = f
-            index = 1
-            print("###")
             for x in self.deviceList:
-                print(" #"+str(index))
+                print("%")
                 print(" -"+x.deviceName)
                 print(" -"+x.ipAddr)
-                index = index + 1
-            print("###")
+            print("#")
             print(" ")
             sys.stdout = original_stdout
             print("New list has been written to node_directory.txt")
@@ -80,15 +77,39 @@ class NewNodeAddrResource(resource.Resource):
     async def render_put(self, request):
         print('PUT payload: %s' % request.payload)
         self.set_content(request.payload)
-        self.addNode(str(request.payload))
+        self.addNode(request.payload.decode("utf-8"))
         return aiocoap.Message(code=aiocoap.CHANGED, payload=self.content)
 
 # logging setup
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("coap-server").setLevel(logging.DEBUG)
 
+def initList():
+    global listt
+    name = ""
+    addr = ""
+    index = 0
+
+    with open('node_directory.txt', 'r') as f:
+        while True:
+            line = f.readline()
+            if (not line) or (line == "#\n"):
+                break
+            elif line == "%\n":
+                line = f.readline()
+                name = line[2:-1]
+                line = f.readline()
+                addr = line[2:-1]
+                tempNode = CoApNode(name, addr)
+                listt.deviceList.append(tempNode)
+                index = index + 1
+        print("Added "+ str(index) + " nodes from directory file.")
+
 
 async def main():
+
+
+    initList()
 
     # Resource tree creation
     root = resource.Site()

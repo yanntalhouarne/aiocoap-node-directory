@@ -1,9 +1,20 @@
-###
- #1
- -b'Device1
- -fd11:22:0:0:fec7:c8ff:c86a:a010'
- #2
- -b'Device2
- -fd11:22:0:0:fec7:c8ff:c86a:a009'
-###
+%
+ -Device1
+ -fd11:22:0:0:fec7:c8ff:c86a:a009
+%
+ -Device2
+ -fd11:22:0:0:fec7:c8ff:c86a:a015
+%
+ -Device3
+ -fd11:22:0:0:fec7:c8ff:c86a:a011
+%
+ -Device4
+ -fd11:22:0:0:fec7:c8ff:c86a:a012
+%
+ -Device5
+ -fd11:22:0:0:fec7:c8ff:c86a:a013
+%
+ -Device6
+ -fd11:22:0:0:fec7:c8ff:c86a:a014
+#
  
