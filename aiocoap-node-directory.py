@@ -66,6 +66,7 @@ class NewNodeAddrResource(resource.Resource):
         if newNode == 1: #if the device name is new, add the node info to the list
             listt.deviceList.append(tempNode)
         listt.printDeviceList(self=listt) # print the list to the file
+        return newNode
         
     def set_content(self, content):
         self.content = content
@@ -77,8 +78,12 @@ class NewNodeAddrResource(resource.Resource):
     async def render_put(self, request):
         print('PUT payload: %s' % request.payload)
         self.set_content(request.payload)
-        self.addNode(request.payload.decode("utf-8"))
-        return aiocoap.Message(code=aiocoap.CHANGED, payload=self.content)
+        nodeIsNew = self.addNode(request.payload.decode("utf-8"))
+        if (nodeIsNew):
+            payload = b"1"
+        else:
+            payload = b"0"
+        return aiocoap.Message(code=aiocoap.CHANGED, payload=payload)
 
 # logging setup
 logging.basicConfig(level=logging.INFO)
@@ -107,7 +112,6 @@ def initList():
 
 
 async def main():
-
 
     initList()
 
