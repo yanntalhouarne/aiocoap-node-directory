@@ -1,5 +1,6 @@
 
 import sys
+#sys.path.append("/srv/homeassistant/lib/python3.9/site-packages/homeassistant/components/my_coap")
 
 import logging
 
@@ -8,6 +9,7 @@ import asyncio
 import aiocoap
 import aiocoap.resource as resource
 
+path = '/srv/homeassistant/lib/python3.9/site-packages/homeassistant/components/my_coap/node_directory.txt'
 
 class CoApNode:
     """ """
@@ -19,12 +21,12 @@ class CoApNode:
     deviceName = " "
 
 class deviceList:
-
+ 
     deviceList = []
 
     def printDeviceList(self):
         original_stdout = sys.stdout
-        with open('node_directory.txt', 'w') as f:
+        with open(path, 'w') as f:
             sys.stdout = f
             for x in self.deviceList:
                 print("%")
@@ -95,7 +97,7 @@ def initList():
     addr = ""
     index = 0
 
-    with open('node_directory.txt', 'r') as f:
+    with open(path, 'r') as f:
         while True:
             line = f.readline()
             if (not line) or (line == "#\n"):

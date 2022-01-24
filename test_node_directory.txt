@@ -25,5 +25,11 @@
 %
  -Device9
  -fd11:22:0:0:fec7:c8ff:c86a:a078
+%
+ -Device10
+ -fd11:22:0:0:fec7:c8ff:c86a:a088
+%
+ -NUCLEO-1
+ -fd11:0022:0000:0000:e7f7:fd31:bce8:21fe
 #
  

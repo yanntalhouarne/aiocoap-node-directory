@@ -10,9 +10,9 @@ async def main():
     context = await Context.create_client_context()
 
     await asyncio.sleep(2)
-    #coap-client -m put coap://[2601:441:4d00:a470:f421:90b:708e:b05f]/other/newNode -t binary -f nodeInfo.txt
-    payload = b"Device9,fd11:22:0:0:fec7:c8ff:c86a:a078"
-    request = Message(code=PUT, payload=payload, uri="coap://[2601:441:4d00:a470:f421:90b:708e:b05f]/other/newNode")
+    #coap-client -m put coap://[2601:441:4d00:a470:ff73:a515:89c:f690]/other/newNode -t binary -f nodeInfo.txt
+    payload = b"Device10,fd11:22:0:0:fec7:c8ff:c86a:a088"
+    request = Message(code=PUT, payload=payload, uri="coap://[2601:441:4d00:a470:ff73:a515:89c:f690]/other/newNode")
 
     response = await context.request(request).response
 
